@@ -1,6 +1,6 @@
 #Makefile
 
-TARGET = pa1
+TARGET = compress
 WARNING = -Wall -Wshadow --pedantic
 ERROR = -Wvla #-Werror #-03
 GCC = gcc -std=c99 -g $(WARNING) $(ERROR)

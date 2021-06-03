@@ -1,8 +1,7 @@
 #include "../header/tree_functions.h"
 
 
-TreeNode* treeCreate(FILE *treeFile, long int* freqArray, int charsUsed)
-{
+TreeNode* treeCreate(FILE *treeFile, long int* freqArray, int charsUsed){
   TreeNode* tree = NULL;
 
   if (charsUsed < 1)
@@ -10,7 +9,6 @@ TreeNode* treeCreate(FILE *treeFile, long int* freqArray, int charsUsed)
 
   // Create a list of tree Nodes first
   LinkedListCreate(&tree, charsUsed, freqArray, -1);
-
   linkedListSort(&tree);
 
   // Creating the actual tree from the list created
@@ -62,8 +60,7 @@ void usefulCodeGen(TreeNode* node, unsigned char nextSigDigit, unsigned char bin
   usefulCodeGen(node->rightChild, nextSigDigit+1, nextRep, codingArray);
 }
 
-void PreOrderPrint(FILE* treeFile, TreeNode* tree)
-{
+void PreOrderPrint(FILE* treeFile, TreeNode* tree){
   if(tree == NULL)
     return;
   if((tree->leftChild == NULL) && (tree->rightChild == NULL))
@@ -101,30 +98,10 @@ char* generateTopology(FILE* inputF, long int *size){
   // NULL character at the end for safety
   topology[*size] = 0;
 
-  // printf("The topology passed to the helper is:\n");
-  // for (int i=0; i < *size; i++)
-  //   printf("%c", topology[i]);
-  //
-  // printf("\n");
   return topologyHelper(topology, size);
 }
 
-/*
-  WORKING ON THIS RIGHT NOW
-
-  Turning the string from one with characters to one that has bits and the characters'
-  translations
-
-*/
 char* topologyHelper(char* first, long int* actualSize){
-
-
-  // printf("The topology received into the helper is:\n");
-  // for (int i=0; i < *actualSize; i++)
-  //   printf("%c", first[i]);
-  //
-  // printf("\n");
-
   unsigned char holder = 0x00;
   bool h_valid = false;
   unsigned char valid_h_bits = 0;
@@ -144,11 +121,8 @@ char* topologyHelper(char* first, long int* actualSize){
   bool seenOne = false;
   bool prevOne = false;
 
-  // printf("Working on the tree\n\n");
   while (initialSize > 0){
     readChar = first[idx];
-
-    // printf("Read %c from the array\n", readChar);
 
     if (prevOne){
       encoding = (unsigned char) readChar;
@@ -173,7 +147,6 @@ char* topologyHelper(char* first, long int* actualSize){
     // Buffering the previous flag for if I've seen a one bit
     prevOne = seenOne;
 
-    // printf("Encoding is %x (%d bits)\n", encoding, encodingBits);
     if (h_valid){
       // If the new encoding combined with the left over bits will overflow
       if ((valid_h_bits + encodingBits) > 8 ){
@@ -183,7 +156,6 @@ char* topologyHelper(char* first, long int* actualSize){
 
         // Put the holder onto the output
         output[*actualSize] = holder;
-        // printf("Wrote (%x) to the output\n", holder);
         *actualSize = *actualSize + 1;
         if (*actualSize == allocatedSize){
           output = (char*) realloc(output, allocatedSize*2);
@@ -199,7 +171,6 @@ char* topologyHelper(char* first, long int* actualSize){
         holder = holder | (encoding << (8-addingBits));
         // Put the holder onto the output
         output[*actualSize] = holder;
-        // printf("Wrote (%x) to the output\n", holder);
         *actualSize = *actualSize + 1;
         if (*actualSize == allocatedSize){
           output = (char*) realloc(output, allocatedSize*2);
@@ -221,7 +192,6 @@ char* topologyHelper(char* first, long int* actualSize){
     }
     else if (encodingBits == 8){
       output[*actualSize] = encoding;
-      // printf("Wrote (%x) to the output\n", encoding);
       *actualSize = *actualSize + 1;
       if (*actualSize == allocatedSize){
         output = (char*) realloc(output, allocatedSize*2);
@@ -234,13 +204,6 @@ char* topologyHelper(char* first, long int* actualSize){
       valid_h_bits = encodingBits;
     }
 
-    // if (h_valid)
-    //   printf("holder is valid with %x (%d bits)\n", holder, valid_h_bits);
-    // else
-    //   printf("holder is invalid\n");
-    //
-    // printf("\n");
-
     initialSize = initialSize - 1;
     idx++;
   }
@@ -249,7 +212,6 @@ char* topologyHelper(char* first, long int* actualSize){
   if (h_valid){
     // Put the holder onto the output
     output[*actualSize] = holder;
-    // printf("Wrote (%x) to the output\n", holder);
     *actualSize = *actualSize + 1;
     if (*actualSize == allocatedSize){
       output = (char*) realloc(output, allocatedSize+1);
@@ -257,8 +219,10 @@ char* topologyHelper(char* first, long int* actualSize){
     }
   }
 
-  return output;
+  // need to free the first topology array since I'm done with it
+  free(first);
 
+  return output;
 }
 
 void freeTree(TreeNode * node){

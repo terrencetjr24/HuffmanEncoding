@@ -102,6 +102,8 @@ int main(int argc, char **argv){
 
   fwrite(compressedOutput, sizeof(char), totalCharsInCompressed, compFile);
 
+  free(topology);
+  free(compressedOutput);
   fclose(readingFile);
   fclose(compFile);
   freeTree(createdTree);
